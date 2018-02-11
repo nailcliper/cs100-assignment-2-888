@@ -15,6 +15,18 @@ public:
     virtual void setRight(Component* r) = 0;
 };
 
+class NextConnector: public Decorator
+{
+private:
+    Component* left;
+    Component* right;
+public:
+    NextConnector() {}
+    bool execute();
+    void setLeft(Component* l);
+    void setRight(Component* r);
+};
+
 class AndConnector : public Decorator
 {
 private:

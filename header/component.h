@@ -2,6 +2,7 @@
 #define __COMPONENT_H__
 
 #include <vector>
+#include <string>
 
 class Component
 {
@@ -13,9 +14,9 @@ public:
 class Executable : public Component
 {
 private:
-    std::vector<char*> argv;
+    std::vector<std::string> argv;
 public:
-    Executable(std::vector<char*> argument_vector) : argv(argument_vector) {}
+    Executable(std::vector<std::string> argument_vector) : argv(argument_vector) {}
     bool execute();
 };
 
