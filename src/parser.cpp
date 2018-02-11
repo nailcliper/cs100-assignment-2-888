@@ -214,7 +214,6 @@ void Parser::parseInput(std::string input, Container* container)
         }
     }
 
-    component_stack.back()->execute();
-    //container->addCommand(component_stack.back());
-    //component_stack.pop_back();
+    container->addCommand(component_stack.back());
+    component_stack.pop_back();
 }
