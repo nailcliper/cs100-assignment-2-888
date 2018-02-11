@@ -181,29 +181,47 @@ void Parser::parseInput(std::string input, Container* container)
         if(token[0] == ";")
         {
             NextConnector* next_con = new NextConnector();
-            next_con->setRight(component_stack.back());
-            component_stack.pop_back();
-            next_con->setLeft(component_stack.back());
-            component_stack.pop_back();
+            if(!component_stack.empty())
+            {
+                next_con->setRight(component_stack.back());
+                component_stack.pop_back();
+            }
+            if(!component_stack.empty())
+            {
+                next_con->setLeft(component_stack.back());
+                component_stack.pop_back();
+            }
             component_stack.push_back(next_con);
         }
         else if(token[0] == "&&")
         {
             AndConnector* and_con = new AndConnector();
-            and_con->setRight(component_stack.back());
-            component_stack.pop_back();
-            and_con->setLeft(component_stack.back());
-            component_stack.pop_back();
+            if(!component_stack.empty())
+            {
+                and_con->setRight(component_stack.back());
+                component_stack.pop_back();
+            }
+            if(!component_stack.empty())
+            {
+                and_con->setLeft(component_stack.back());
+                component_stack.pop_back();
+            }
             component_stack.push_back(and_con);
 
         }
         else if(token[0] == "||")
         {
             OrConnector* or_con = new OrConnector();
-            or_con->setRight(component_stack.back());
-            component_stack.pop_back();
-            or_con->setLeft(component_stack.back());
-            component_stack.pop_back();
+            if(!component_stack.empty())
+            {
+                or_con->setRight(component_stack.back());
+                component_stack.pop_back();
+            }
+            if(!component_stack.empty())
+            {
+                or_con->setLeft(component_stack.back());
+                component_stack.pop_back();
+            }
             component_stack.push_back(or_con);
 
         }

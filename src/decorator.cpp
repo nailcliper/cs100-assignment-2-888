@@ -2,9 +2,13 @@
 
 bool NextConnector::execute()
 {
-    left->execute();
-    if(right->execute())
-        return true;
+    if(left)
+        left->execute();
+    if(right)
+    {
+        if(right->execute())
+            return true;
+    }
     return false;
 }
 
@@ -20,11 +24,17 @@ void NextConnector::setRight(Component* r)
 
 bool AndConnector::execute()
 {
-    if(left->execute())
+    if(left)
     {
-        if(right->execute())
-            return true;
-        return false;
+        if(left->execute())
+        {
+            if(right)
+            {
+                if(right->execute())
+                    return true;
+            }
+            return false;
+        }
     }
     return false;
 }
@@ -41,10 +51,17 @@ void AndConnector::setRight(Component* r)
 
 bool OrConnector::execute()
 {
-    if(left->execute())
-        return true;
-    if(right->execute())
-        return true;
+    if(left)
+    {
+        if(left->execute())
+            return true;
+    }
+
+    if(right)
+    {
+        if(right->execute())
+            return true;
+    }    
     return false;
 }
 
