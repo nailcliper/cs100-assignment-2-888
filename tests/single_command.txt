@@ -1,0 +1,8 @@
+echo "Successful Echo Test"
+echo "Testing unrecognized command"
+acho "failed echo test"
+echo "Testing ls -l -a"
+ls -l -a
+echo "Testing invalid argument"
+ls abc
+--q

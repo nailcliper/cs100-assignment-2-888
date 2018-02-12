@@ -1,0 +1,2 @@
+echo 1; echo 2 && echo 3; acho 4 && --q; echo 5 || --q; echo 6 && --q; echo 7;
+echo abc;

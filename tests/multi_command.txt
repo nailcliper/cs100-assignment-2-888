@@ -1,0 +1,5 @@
+echo "a 'bc' echo d";echo e && echo f && echo g
+echo 1 || echo 2; acho 3 || echo 4; echo 5 || echo 6 && echo 7
+echo a && echo b || echo c; echo d && acho e || echo f
+echo 1 && echo 2; acho 3 && echo 4 || echo 5
+--q
