@@ -35,17 +35,21 @@ void Parser::parseInput(std::string input, Container* container)
         if(token == "\"" || token == "\'")
         {
             ++list_it;
-            if(*list_it != token)
+            if(list_it != token_list.end() && *list_it != token)
             {
                 std::string master = *list_it;
                 std::list<std::string>::iterator temp_it = list_it;
                 ++temp_it;
-                while(*temp_it != token)
+                while(temp_it != token_list.end() && *temp_it != token)
                 {
                     master = master + *temp_it;
                     token_list.erase(temp_it);
                     temp_it = list_it;
                     ++temp_it;
+                }
+                if(temp_it == token_list.end())
+                {
+                    token_list.push_back(token);
                 }
                 *list_it = master;
                 ++list_it;
