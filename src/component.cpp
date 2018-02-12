@@ -16,7 +16,7 @@ bool Executable::execute()
         pid_t pid = fork();
         if(pid == -1) //Fork Failed
         {
-            perror("Fork Error");
+            perror("fork Error");
             exit(-1);
         }
 
@@ -39,7 +39,11 @@ bool Executable::execute()
                 argc.push_back(0);
                 char **args = &argc[0];
 
-                execvp(args[0], args);
+                if(execvp(args[0], args) < 0);
+                {
+                    perror("execvp Failed");
+                    exit(-1);
+                }
                 std::cout << "Unrecognized Command: " << args[0] << std::endl;
                 status = 1;
                 exit(1);
@@ -48,7 +52,11 @@ bool Executable::execute()
 
         else if (pid > 0) //Parent Process
         {
-            waitpid(pid, &status, WCONTINUED);
+            if(waitpid(pid, &status, WCONTINUED) < 0)
+            {
+                perror("waitpid Failed");
+                exit(-1);
+            }
             if(status == 0)
                 return true;
             if(WEXITSTATUS(status) == 2)
