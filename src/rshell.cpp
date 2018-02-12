@@ -15,20 +15,25 @@ This program will run a loop prompting the user for bash commands
 #include "../header/decorator.h"
 #include "../header/strategy.h"
 #include "../header/parser.h"
+#include "../header/common.h"
 
-using namespace std;
+using namespace std; 
 
 int main()
 {
-    string input;
-    Parser* parser = new Parser;
-    Container* container = new Container;
+    cout << "Running. --q to quit" << endl;
+    do
+    {
+        string input;
+        Parser* parser = new Parser;
+        Container* container = new Container;
 
-    cout << "Running" << endl << "$ ";
-    getline(cin, input);
-    parser->parseInput(input, container);
+        cout << "    $ ";
+        getline(cin, input);
+        parser->parseInput(input, container);
 
-    container->runCommands();
+        container->runCommands();
+    } while(!exit_cmd);
 
     return 0;
 }

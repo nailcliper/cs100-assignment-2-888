@@ -1,4 +1,5 @@
 #include "../header/component.h"
+#include "../header/common.h"
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,52 +10,51 @@
 
 bool Executable::execute()
 {
-    int status = 1;
-    pid_t pid = fork();
-    if(pid == -1) //Fork Failed
+    if(!exit_cmd)
     {
-        perror("Fork Error");
-        exit(-1);
-    }
-
-    else if (pid == 0) //Child Process
-    {
-        std::vector<char*> argc;
-        int vec_size = argv.size();
-        for(int i = 0; i < vec_size; i++)
+        int status = 1;
+        pid_t pid = fork();
+        if(pid == -1) //Fork Failed
         {
-            argc.push_back(const_cast<char*>(argv[i].c_str()));
+            perror("Fork Error");
+            exit(-1);
         }
-        argc.push_back(0);
-        char **args = &argc[0];
 
-        execvp(args[0], args);
-        std::cout << "Unrecognized Command: " << args[0] << std::endl;
-        status = 1;
-        exit(1);
-    }
-
-    else if (pid > 0) //Parent Process
-    {
-        if(waitpid(pid, &status, WCONTINUED) > 0)
+        else if (pid == 0) //Child Process
         {
-            /*
-            if(WIFEXITED(status))
+            if(argv[0] == "--q")
             {
-                std::cout << "Child exited with a status of ";
-                std::cout << WEXITSTATUS(status) << std::endl;
+                exit_cmd = true;
+                status = 2;
+                exit(2);
             }
-            if(WIFSIGNALED(status))
+            if(!exit_cmd)
             {
-                std::cout << "Child exited via signal ";
-                std::cout << WTERMSIG(status) << std::endl;
-            }
-            */
-        }
-        if(status == 0)
-            return true;
-        return false;
-    }
+                std::vector<char*> argc;
+                int vec_size = argv.size();
+                for(int i = 0; i < vec_size; i++)
+                {
+                    argc.push_back(const_cast<char*>(argv[i].c_str()));
+                }
+                argc.push_back(0);
+                char **args = &argc[0];
 
+                execvp(args[0], args);
+                std::cout << "Unrecognized Command: " << args[0] << std::endl;
+                status = 1;
+                exit(1);
+            }
+        }
+
+        else if (pid > 0) //Parent Process
+        {
+            waitpid(pid, &status, WCONTINUED);
+            if(status == 0)
+                return true;
+            if(WEXITSTATUS(status) == 2)
+                exit_cmd = true;
+            return false;
+        }
+    }
     return false;
 }

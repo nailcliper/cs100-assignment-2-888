@@ -11,7 +11,7 @@ void Container::addCommand(Component* command)
 void Container::runCommands()
 {
     int size = commands.size();
-    for(int i = 0; i < size; i++)
+    for(int i =0; i < size; i++)
     {
         commands[i]->execute();
     }
