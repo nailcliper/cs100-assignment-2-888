@@ -1,7 +1,16 @@
-# assignment2
+﻿# CS100 Assignment 2: Basic Command Shell
+# Main Features
+This basic command shell will present the user with a command prompt ($) from which they can run the standard bash commands found in the /bin folder. The shell can:
 
-In this assignment, please finish two things:
+ - Accept multiple commands on one line
+ - Run commands sequentially using ; or with the logic operators && and ||
+ - Manage strings declared with " and ', including nested strings (e.g. "a 'bc' d")
+ - Ignore text after a # is declared as the start of a substring (e.g. echo a # or echo a;#)
+ - Continuously present the command prompt until an exit command (--q) is entered
+ - Integrate the exit command with the logic operators
 
-1 In "CS100_Assignment1.pdf", finish setting up your “Assignment” github repo, and writing an epic for assignment 2.
 
-2 Finish everything mentioned in "CS100_Assignment2.pdf".
+## Known bugs
+
+- Escape characters not implemented (e.g. echo " a \\" b" will print a \\" b)
+- The shell scripts found in /test encounter a localized segmentation fault if their associated .txt files do not contain the exit command
