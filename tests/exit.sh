@@ -4,11 +4,11 @@ echo
 echo "Testing exit command"
 
 echo
-../rshell.out < "exit1.txt"
+../bin/rshell.out < "exit1.txt"
 echo
-../rshell.out < "exit2.txt"
+../bin/rshell.out < "exit2.txt"
 echo
-../rshell.out <"exit3.txt"
+../bin/rshell.out <"exit3.txt"
 echo
 echo "Test Complete"
 echo

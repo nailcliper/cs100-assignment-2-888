@@ -4,7 +4,7 @@ echo
 echo "Testing multiple commands"
 
 echo
-../rshell.out < "multi_command.txt"
+../bin/rshell.out < "multi_command.txt"
 echo
 echo "Test Complete"
 echo
