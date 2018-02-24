@@ -1,6 +1,6 @@
 CC = g++
 CCFLAGS = -Wall -Werror -ansi -pedantic
-TARGET = rshell.out
+TARGET = bin/rshell.out
 
 SRC = src
 HEADER = header

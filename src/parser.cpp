@@ -13,32 +13,41 @@
 #include "../header/strategy.h"
 #include "../header/decorator.h"
 
-void Parser::parseInput(std::string input, Container* container)
+using namespace std;
+
+void Parser::parseStrings(list<string>& token_list)
 {
-    
-    //Split input string by " and ', keep delimiters
-    boost::char_separator<char> string_sep("","\"\'");
-    boost::tokenizer< boost::char_separator<char> > str_tok(input, string_sep);
-    boost::tokenizer< boost::char_separator<char> >::iterator it;
+    list<string>::iterator list_it;
 
-    std::list<std::string> token_list;
-    std::list<std::string>::iterator list_it;
-    for(it = str_tok.begin(); it != str_tok.end(); ++it)
-    {
-        token_list.push_back(*it);
-    }
-
-    //Reconstruct compunded strings into one token
+    //Split string by " and ', keep delimiters
     for(list_it = token_list.begin(); list_it != token_list.end(); ++list_it)
     {
-        std::string token = *list_it;
+        string token = *list_it;
+        list<string>::iterator temp_it = list_it;
+        boost::char_separator<char> str_sep("","\"\'");
+        boost::tokenizer< boost::char_separator<char> > str_tok(token, str_sep);
+        boost::tokenizer< boost::char_separator<char> >::iterator it;
+
+        for(it = str_tok.begin(); it != str_tok.end(); ++it)
+        {
+            token_list.push_back(*it);
+            ++temp_it;
+        }
+        token_list.erase(list_it);
+        list_it = temp_it;
+    }
+
+    //Reconstruct compounded strings into token
+    for(list_it = token_list.begin(); list_it != token_list.end(); ++list_it)
+    {
+        string token = *list_it;
         if(token == "\"" || token == "\'")
         {
             ++list_it;
             if(list_it != token_list.end() && *list_it != token)
             {
-                std::string master = *list_it;
-                std::list<std::string>::iterator temp_it = list_it;
+                string master = *list_it;
+                list<string>::iterator temp_it = list_it;
                 ++temp_it;
                 while(temp_it != token_list.end() && *temp_it != token)
                 {
@@ -54,35 +63,40 @@ void Parser::parseInput(std::string input, Container* container)
                 *list_it = master;
                 ++list_it;
             }
-        }
+        } 
     }
+}
 
-    //Iterate over non-" X " type tokens, splitting by " ;()", keeping ";()"
+void Parser::parseSymbols(list<string>& token_list)
+{
+    list<string>::iterator list_it;
+
+    //Iterate over non-" X " type tokens, splitting by " ;()[]", keeping ";()[]"
     for(list_it = token_list.begin(); list_it != token_list.end(); ++list_it)
     {
-        std::string token = *list_it;
+        string token = *list_it;
         if(token == "\"" || token == "\'") //Skip string tokens and remove the markers
         {
-            std::list<std::string>::iterator left_it = list_it;
+            list<string>::iterator left_it = list_it;
             ++list_it;
-            std::list<std::string>::iterator right_it = list_it;
+            list<string>::iterator right_it = list_it;
             ++right_it;
             token_list.erase(left_it);
             token_list.erase(right_it);
         }
         else
         {
-            boost::char_separator<char> cmd_sep(" ",";()");
+            boost::char_separator<char> cmd_sep(" ",";()[]");
             boost::tokenizer< boost::char_separator<char> > cmd_tok(*list_it, cmd_sep);
-    boost::tokenizer< boost::char_separator<char> >::iterator cmd_it;
+            boost::tokenizer< boost::char_separator<char> >::iterator cmd_it;
 
             for(cmd_it = cmd_tok.begin(); cmd_it != cmd_tok.end(); ++cmd_it)
             {
-                std::string cmd = *cmd_it;
+                string cmd = *cmd_it;
                 token_list.insert(list_it,*cmd_it);
-                
+
                 if(cmd.at(0) == '#') //Truncate list at comment character
-                {    
+                {
                     boost::tokenizer< boost::char_separator<char> >::iterator temp = cmd_it;
                     ++temp;
                     while(temp != cmd_tok.end())
@@ -91,24 +105,30 @@ void Parser::parseInput(std::string input, Container* container)
                         ++cmd_it;
                     }
                     --list_it;
-                    std::list<std::string>::iterator temp2 = list_it;
+                    list<string>::iterator temp2 = list_it;
                     ++temp2;
                     token_list.resize(std::distance(token_list.begin(),temp2));
                 }
             }
-            std::list<std::string>::iterator temp_it = list_it;
+            list<string>::iterator temp_it = list_it;
             --list_it;
             token_list.erase(temp_it);
         }
     }
+    
+}
 
-    //Convert from infix to postfix
-    std::vector<std::string> stack;
-    std::vector<std::string> argv;
-    std::list< std::vector<std::string> > postfix_list;
+list< vector<string> > Parser::infixToPostfix(list<string>& token_list)
+{
+    list<string>::iterator list_it;
+    
+    vector<string> stack;
+    vector<string> argv;
+    list< vector<string> > postfix_list;
+
     for(list_it = token_list.begin(); list_it != token_list.end(); ++list_it)
     {
-        std::string token = *list_it;
+        string token = *list_it;
         if(token == "(")
         {
             if(argv.size() > 0)
@@ -127,8 +147,8 @@ void Parser::parseInput(std::string input, Container* container)
             }
             while(!stack.empty() && stack.back() != "(")
             {
-                std::string op = stack.back();
-                std::vector<std::string> op_vec;
+                string op = stack.back();
+                vector<string> op_vec;
                 op_vec.push_back(op);
                 postfix_list.push_back(op_vec);
                 stack.pop_back();
@@ -147,8 +167,8 @@ void Parser::parseInput(std::string input, Container* container)
             }
             if(!stack.empty() && stack.back() != "(")
             {
-                std::string op = stack.back();
-                std::vector<std::string> op_vec;
+                string op = stack.back();
+                vector<string> op_vec;
                 op_vec.push_back(op);
                 postfix_list.push_back(op_vec);
                 stack.pop_back();
@@ -160,22 +180,27 @@ void Parser::parseInput(std::string input, Container* container)
             argv.push_back(token);
         }
     }
+
     if(argv.size() > 0)
     {
         postfix_list.push_back(argv);
         argv.clear();
     }
+
     while(!stack.empty())
     {
-        std::string op = stack.back();
-        std::vector<std::string> op_vec;
+        string op = stack.back();
+        vector<string> op_vec;
         op_vec.push_back(op);
         postfix_list.push_back(op_vec);
         stack.pop_back();
     }
 
+    return postfix_list;
+}
 
-    //Convert from postfix to expression tree
+Component* Parser::postfixToTree(list< vector<string> >& postfix_list)
+{
     std::vector<Component*> component_stack;
     std::list< std::vector<std::string> >::iterator post_it;
     for(post_it = postfix_list.begin(); post_it != postfix_list.end(); ++post_it
@@ -236,6 +261,25 @@ void Parser::parseInput(std::string input, Container* container)
         }
     }
 
-    container->addCommand(component_stack.back());
-    component_stack.pop_back();
+    return component_stack.back();
+}
+
+void Parser::parseInput(string input, Container* container)
+{
+    list<string> token_list;
+    list<string>::iterator list_it;
+    token_list.push_back(input);
+
+    //Create a list of string tokens
+    //Treat string literals as single tokens
+    parseStrings(token_list);
+
+    //Split non-string literal tokens by spaces and special symbols
+    parseSymbols(token_list);
+
+    //Convert from infix to postfix
+    list< vector<string> > postfix_list = infixToPostfix(token_list);
+
+    //Convert from postfix to expression tree
+    container->addCommand(postfixToTree(postfix_list));
 }
