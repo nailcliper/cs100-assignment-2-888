@@ -84,22 +84,22 @@ bool Test::execute()
     {
         if(flag == "-d")
         {
-            cout << "(false)" << endl;
+            cout << "(False)" << endl;
             return false;
         }
-        cout << "(true)" << endl;
+        cout << "(True)" << endl;
         return true;
     }
     else if(S_ISDIR(buf.st_mode))
     {
         if(flag == "-f")
         {
-            cout << "(false)" << endl;
+            cout << "(False)" << endl;
             return false;
         }
-        cout << "(true)" << endl;
+        cout << "(True)" << endl;
         return true;
     }
-    cout << "(false)" << endl;
+    cout << "(False)" << endl;
     return false;
 }
