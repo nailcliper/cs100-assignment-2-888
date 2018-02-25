@@ -15,7 +15,6 @@ This program will run a loop prompting the user for bash commands
 #include "../header/decorator.h"
 #include "../header/strategy.h"
 #include "../header/parser.h"
-#include "../header/common.h"
 
 using namespace std; 
 
@@ -33,7 +32,7 @@ int main()
         parser->parseInput(input, container);
 
         container->runCommands();
-    } while(!exit_cmd);
+    } while(true);
 
     return 0;
 }
