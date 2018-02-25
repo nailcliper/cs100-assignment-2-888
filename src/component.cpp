@@ -22,32 +22,23 @@ bool Executable::execute()
 
         else if (pid == 0) //Child Process
         {
-            if(argv[0] == "--q")
+            std::vector<char*> argc;
+            int vec_size = argv.size();
+            for(int i = 0; i < vec_size; i++)
             {
-                exit_cmd = true;
-                status = 2;
-                exit(2);
+                argc.push_back(const_cast<char*>(argv[i].c_str()));
             }
-            if(!exit_cmd)
-            {
-                std::vector<char*> argc;
-                int vec_size = argv.size();
-                for(int i = 0; i < vec_size; i++)
-                {
-                    argc.push_back(const_cast<char*>(argv[i].c_str()));
-                }
-                argc.push_back(0);
-                char **args = &argc[0];
+            argc.push_back(0);
+            char **args = &argc[0];
 
-                if(execvp(args[0], args) < 0);
-                {
-                    perror("execvp Failed");
-                    exit(-1);
-                }
-                std::cout << "Unrecognized Command: " << args[0] << std::endl;
-                status = 1;
-                exit(1);
+            if(execvp(args[0], args) < 0);
+            {
+                perror("execvp Failed");
+                exit(-1);
             }
+            std::cout << "Unrecognized Command: " << args[0] << std::endl;
+            status = 1;
+            exit(1);
         }
 
         else if (pid > 0) //Parent Process
@@ -65,4 +56,20 @@ bool Executable::execute()
         }
     }
     return false;
+}
+
+bool Quit::execute()
+{
+    exit_cmd = true;
+    return true;
+}
+
+bool Test::execute()
+{
+    bool isSymbolic = false;
+    if(argv[0] == "[")
+        isSymbolic = true;
+    if(isSymbolic)
+        return false;
+    return true;
 }

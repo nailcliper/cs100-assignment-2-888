@@ -20,4 +20,20 @@ public:
     bool execute();
 };
 
+class Quit : public Component
+{
+public:
+    Quit() {}
+    bool execute();
+};
+
+class Test : public Component
+{
+private:
+    std::vector<std::string> argv;
+public:
+    Test(std::vector<std::string> argument_vector) : argv(argument_vector) {}
+    bool execute();
+};
+
 #endif //__COMPONENT_H__

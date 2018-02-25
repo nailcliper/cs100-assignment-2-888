@@ -254,6 +254,16 @@ Component* Parser::postfixToTree(list< vector<string> >& postfix_list)
             component_stack.push_back(or_con);
 
         }
+        else if(token[0] == "[" || token[0] == "test")
+        {
+            Test* test = new Test(token);
+            component_stack.push_back(test);
+        }
+        else if(token[0] == "--q")
+        {
+            Quit* quit = new Quit();
+            component_stack.push_back(quit);
+        }
         else
         {
             Executable* executable = new Executable(token);
