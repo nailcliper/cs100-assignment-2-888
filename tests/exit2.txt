@@ -1,2 +1,2 @@
---q
-echo a
+echo "--q"; --q
+echo "echo a"; echo a

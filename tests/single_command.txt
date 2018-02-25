@@ -1,8 +1,8 @@
-echo "Successful Echo Test"
-echo "Testing unrecognized command"
-acho "failed echo test"
-echo "Testing ls -l -a"
-ls -l -a
-echo "Testing invalid argument"
-ls abc
---q
+echo "echo 'Successful Echo Test'"; echo 'Successful Echo Test'
+echo "echo 'Testing unrecognized command'"; echo 'Testing unrecognized command'
+echo" acho 'failed echo test'"; acho 'failed echo test'
+echo "echo 'Testing ls -l -a'"; echo 'Testing ls -l -a'
+echo "ls -l -a"; ls -l -a
+echo "echo 'Testing invalid argument'"; echo 'Testing invalid argument'
+echo "ls abc"; ls abc
+echo "--q"; --q
