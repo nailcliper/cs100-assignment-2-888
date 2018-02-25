@@ -1,11 +1,16 @@
 #include "../header/component.h"
 #include <unistd.h>
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <iostream>
 #include <signal.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
+using namespace std;
 
 bool Executable::execute()
 {
@@ -19,7 +24,7 @@ bool Executable::execute()
 
     else if (pid == 0) //Child Process
     {
-        std::vector<char*> argc;
+        vector<char*> argc;
         int vec_size = argv.size();
         for(int i = 0; i < vec_size; i++)
         {
@@ -33,7 +38,7 @@ bool Executable::execute()
             perror("execvp Failed");
             exit(-1);
         }
-        std::cout << "Unrecognized Command: " << args[0] << std::endl;
+        cout << "Unrecognized Command: " << args[0] << std::endl;
         status = 1;
         exit(1);
     }
@@ -54,16 +59,47 @@ bool Executable::execute()
 
 bool Quit::execute()
 {
-    exit(0);
+    exit(0); //Exits the main process
     return false;
 }
 
 bool Test::execute()
 {
-    bool isSymbolic = false;
     if(argv[0] == "[")
-        isSymbolic = true;
-    if(isSymbolic)
-        return false;
-    return true;
+    {
+        if(argv.back() == "]")
+            argv.pop_back();
+    }
+    argv.erase(argv.begin());
+
+    string flag = argv[0];
+    if(flag == "-e" || flag == "-f" || flag == "-d")
+        argv.erase(argv.begin());
+
+    struct stat buf;
+    char *cstr = new char[argv[0].length() + 1];
+    strcpy(cstr, argv[0].c_str());
+    stat(cstr, &buf);
+    if(S_ISREG(buf.st_mode))
+    {
+        if(flag == "-d")
+        {
+            cout << "(false)" << endl;
+            return false;
+        }
+        cout << "(true)" << endl;
+        return true;
+    }
+    else if(S_ISDIR(buf.st_mode))
+    {
+        if(flag == "-f")
+        {
+            cout << "(false)" << endl;
+            return false;
+        }
+        cout << "(true)" << endl;
+        return true;
+    }
+    cout << "(false)" << endl;
+    return false;
 }
