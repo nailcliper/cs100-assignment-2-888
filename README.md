@@ -1,4 +1,4 @@
-﻿# CS100 Assignment 2: Basic Command Shell
+﻿# CS100: Basic Command Shell
 # Main Features
 This basic command shell will present the user with a command prompt ($) from which they can run the standard bash commands found in the /bin folder. The shell can:
 
@@ -8,6 +8,8 @@ This basic command shell will present the user with a command prompt ($) from wh
  - Ignore text after a # is declared as the start of a substring (e.g. echo a # or echo a;#)
  - Continuously present the command prompt until an exit command (--q) is entered
  - Integrate the exit command with the logic operators
+ - Test if a file/directory exists with the "test" command or [ ] brackets with optional -e, -f, -d flags
+ - Precedence operators ( ) can control the order of executed commands.
 
 
 ## Known bugs
