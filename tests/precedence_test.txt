@@ -3,4 +3,5 @@ echo "(echo A && echo B) || (echo C && echo D)"; (echo a && echo b) || (echo C &
 echo "(echo a && echo b"; (echo a && echo b;
 echo "echo A && (acho B || echo C)"; echo A && (acho B || echo C);
 echo "a && echo b && (echo c || echo d) && echo e)"; echo a && echo b && (echo c || echo d) && echo e);
+echo "echo A && ( echo B && ( echo C || echo D ))"; echo A && ( echo B && ( echo C || echo D ))
 echo "--q"; --q
