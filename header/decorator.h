@@ -2,6 +2,7 @@
 #define __DECORATOR_H__
 
 #include "component.h"
+#include <string>
 
 class Decorator : public Component
 {
@@ -46,6 +47,48 @@ private:
     Component* right;
 public:
     OrConnector() {}
+    bool execute();
+    void setLeft(Component* l);
+    void setRight(Component* r);
+};
+
+class InputRedirector : public Decorator
+{
+private:
+    std::string filename;
+    Component* left;
+    Component* right;
+public:
+    InputRedirector() {}
+    bool execute();
+    void setLeft(Component* l);
+    void setRight(Component* r);
+    void setFile(std::string name);
+};
+
+class OutputRedirector : public Decorator
+{
+private:
+    std::string filename;
+    std::string flag;
+    Component* left;
+    Component* right;
+public:
+    OutputRedirector() {}
+    OutputRedirector(std::string f) : flag(f) {}
+    bool execute();
+    void setLeft(Component* l);
+    void setRight(Component* r);
+    void setFile(std::string name);
+};
+
+class Piper : public Decorator
+{
+private:
+    Component* left;
+    Component* right;
+public:
+    Piper() {}
     bool execute();
     void setLeft(Component* l);
     void setRight(Component* r);

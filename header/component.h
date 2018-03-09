@@ -18,6 +18,7 @@ private:
 public:
     Executable(std::vector<std::string> argument_vector) : argv(argument_vector) {}
     bool execute();
+    std::string getArg(int index) { return argv[index]; }
 };
 
 class Quit : public Component
