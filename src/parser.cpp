@@ -118,6 +118,21 @@ void Parser::parseSymbols(list<string>& token_list)
     
 }
 
+bool Parser::isHigherPrecedence(string a, string b)
+{
+    if(b == "(")
+        return true;
+    
+    if(a == "<" || a == ">" || a == ">>" || a == "|")
+    {
+        if(b == ";" || b == "&&" || b == "||")
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 list< vector<string> > Parser::infixToPostfix(list<string>& token_list)
 {
     list<string>::iterator list_it;
@@ -158,14 +173,16 @@ list< vector<string> > Parser::infixToPostfix(list<string>& token_list)
                 stack.pop_back();
             }
         }
-        else if(token == ";" || token == "&&" || token == "||")
+        
+        else if(token == ";" || token == "&&" || token == "||" ||
+                token == "<" || token == ">" || token == ">>" || token == "|")
         {
             if(argv.size() > 0)
             {
                 postfix_list.push_back(argv);
                 argv.clear();
             }
-            if(!stack.empty() && stack.back() != "(")
+            while(!stack.empty() && !isHigherPrecedence(token, stack.back()))
             {
                 string op = stack.back();
                 vector<string> op_vec;
@@ -263,6 +280,70 @@ Component* Parser::postfixToTree(list< vector<string> >& postfix_list)
         {
             Quit* quit = new Quit();
             component_stack.push_back(quit);
+        }
+        else if(token[0] == "<")
+        {
+            InputRedirector* indir = new InputRedirector();
+            if(!component_stack.empty())
+            {
+				if(Executable* temp = dynamic_cast<Executable*>(component_stack.back()))
+				{
+					indir->setFile(temp->getArg(0));
+					component_stack.pop_back();
+				}
+                else
+				{
+					cout << "Unexpected Symbol found for filename" << endl;
+					component_stack.pop_back();
+				}
+            }
+			if(!component_stack.empty())
+            {
+                indir->setLeft(component_stack.back());
+                component_stack.pop_back();
+            }
+			
+			component_stack.push_back(indir);
+        }
+        else if(token[0] == ">" || token[0] == ">>")
+        {
+            OutputRedirector* outdir = new OutputRedirector(token[0]);
+            if(!component_stack.empty())
+            {
+				if(Executable* temp = dynamic_cast<Executable*>(component_stack.back()))
+				{
+					outdir->setFile(temp->getArg(0));
+					component_stack.pop_back();
+				}
+				else
+				{
+					cout << "Unexpected Symbol found for filename" << endl;
+					component_stack.pop_back();
+				}
+            }
+			if(!component_stack.empty())
+            {
+                outdir->setLeft(component_stack.back());
+                component_stack.pop_back();
+            }
+			
+			component_stack.push_back(outdir);
+        }
+        else if(token[0] == "|")
+        {
+            Piper* piper = new Piper();
+            if(!component_stack.empty())
+            {
+                piper->setRight(component_stack.back());
+                component_stack.pop_back();
+            }
+            if(!component_stack.empty())
+            {
+                piper->setLeft(component_stack.back());
+                component_stack.pop_back();
+            }
+			
+			component_stack.push_back(piper);
         }
         else
         {
