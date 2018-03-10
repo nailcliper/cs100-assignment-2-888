@@ -230,10 +230,10 @@ bool Piper::execute()
         if(status == 0)
 		{
 			close(fd[1]); //close unused write pipe
-			dup2(0,5); //stores 0(stdin) to 5
+			int stdin_store = dup(0);
 			dup2(fd[0],0); //dupes read-pipe to 0
 			bool success = right->execute();
-			dup2(5,0);
+			dup2(stdin_store,0);
 			if(success)
 			{
 				return true;
