@@ -117,7 +117,6 @@ bool InputRedirector::execute()
         }
         if(status == 0)
             return true;
-        return false;
     }
     
     return false;
@@ -175,7 +174,6 @@ bool OutputRedirector::execute()
         }
         if(status == 0)
             return true;
-        return false;
     }
     
     return false;
@@ -230,16 +228,34 @@ bool Piper::execute()
         if(status == 0)
 		{
 			close(fd[1]); //close unused write pipe
-			int stdin_store = dup(0);
-			dup2(fd[0],0); //dupes read-pipe to 0
-			bool success = right->execute();
-			dup2(stdin_store,0);
-			if(success)
+			pid_t pid2 = fork();
+			if(pid2 == -1) //Fork Failed
 			{
-				return true;
+				perror("fork Error");
+				exit(-1);
+			}
+			else if(pid2 == 0) //Child Process
+			{
+				dup2(fd[0],0); //dupes read-pipe to 0
+				bool success = right->execute();
+				close(0);
+				if(success)
+				{
+					exit(0);
+				}
+				exit(1);
+			}
+			else if(pid2 > 0) //Parent Process
+			{
+				if(waitpid(pid2, &status, WCONTINUED) < 0)
+				{
+					perror("waitpid Failed");
+					exit(-1);
+				}
+				if(status == 0)
+					return true;
 			}
 		}
-        return false;
     }
 	
     return false;
