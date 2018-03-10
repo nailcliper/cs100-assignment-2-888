@@ -10,7 +10,10 @@ This basic command shell will present the user with a command prompt ($) from wh
  - Integrate the exit command with the logic operators
  - Test if a file/directory exists with the "test" command or [ ] brackets with optional -e, -f, -d flags
  - Precedence operators ( ) can control the order of executed commands.
-
+ - Redirect input to a command from a provided filepath using <
+ - Redirect output from one or more commands to a provided filepath using >
+ - Append to filepaths using >>
+ - Pipe the output of one command to the input of another command using |
 
 ## Known bugs
 
