@@ -62,6 +62,10 @@ void Parser::parseStrings(list<string>& token_list)
                 *list_it = master;
                 ++list_it;
             }
+			else if(list_it == token_list.end())
+			{
+				--list_it;
+			}
         } 
     }
 }
@@ -78,10 +82,19 @@ void Parser::parseSymbols(list<string>& token_list)
         {
             list<string>::iterator left_it = list_it;
             ++list_it;
-            list<string>::iterator right_it = list_it;
-            ++right_it;
-            token_list.erase(left_it);
-            token_list.erase(right_it);
+			if(list_it != token_list.end())
+			{
+				list<string>::iterator right_it = list_it;
+				++right_it;
+				token_list.erase(left_it);
+				token_list.erase(right_it);
+			}
+			else
+			{
+				--list_it;
+				--list_it;
+				token_list.erase(left_it);
+			}
         }
         else
         {
