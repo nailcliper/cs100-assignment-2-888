@@ -211,9 +211,8 @@ bool Piper::execute()
     else if(pid == 0) //Child Process
     {
 		close(fd[0]); //close unused read pipe
-		dup2(1,fd[1]); //dup write pipe to 1(stdout)
+		dup2(fd[1],1); //dup write pipe to 1(stdout)
 		bool success = left->execute();
-		close(fd[1]);
 		close(1);
 		if(success)
 		{
@@ -231,11 +230,10 @@ bool Piper::execute()
         if(status == 0)
 		{
 			close(fd[1]); //close unused write pipe
-			dup2(5,0); //stores 0(stdin) to 5
-			dup2(0,fd[0]); //dupes read-pipe to 0
+			dup2(0,5); //stores 0(stdin) to 5
+			dup2(fd[0],0); //dupes read-pipe to 0
 			bool success = right->execute();
-			close(fd[0]);
-			dup2(0,5);
+			dup2(5,0);
 			if(success)
 			{
 				return true;
