@@ -10,7 +10,6 @@
 
 #include "../header/parser.h"
 #include "../header/component.h"
-#include "../header/strategy.h"
 #include "../header/decorator.h"
 
 using namespace std;
@@ -355,7 +354,7 @@ Component* Parser::postfixToTree(list< vector<string> >& postfix_list)
     return component_stack.back();
 }
 
-void Parser::parseInput(string input, Container* container)
+void Parser::parseInput(string input)
 {
     list<string> token_list;
     list<string>::iterator list_it;
@@ -372,5 +371,6 @@ void Parser::parseInput(string input, Container* container)
     list< vector<string> > postfix_list = infixToPostfix(token_list);
 
     //Convert from postfix to expression tree
-    container->addCommand(postfixToTree(postfix_list));
+	Component* root = postfixToTree(postfix_list);
+	root->execute();
 }

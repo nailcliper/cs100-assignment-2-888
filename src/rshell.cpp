@@ -13,7 +13,6 @@ This program will run a loop prompting the user for bash commands
 
 #include "../header/component.h"
 #include "../header/decorator.h"
-#include "../header/strategy.h"
 #include "../header/parser.h"
 
 using namespace std; 
@@ -25,13 +24,11 @@ int main()
     {
         string input;
         Parser* parser = new Parser;
-        Container* container = new Container;
 
         cout << "    $ ";
         getline(cin, input);
-        parser->parseInput(input, container);
-
-        container->runCommands();
+        parser->parseInput(input);
+		
     } while(true);
 
     return 0;
