@@ -1,0 +1,5 @@
+echo "echo '(echo a; echo B; echo c; echo D) > testfile.txt'"; (echo a; echo B; echo c; echo D) > testfile.txt
+echo "echo 'Printing testfile' && cat < testfile.txt"; echo 'Printing testfile' && cat < testfile.txt
+echo "echo 'Printing number of lines in testfile'; wc -l < testfile.txt";echo 'Printing number of lines in testfile'; wc -l < testfile.txt
+echo "rm testfile.txt"; rm testfile.txt
+echo "--q"; --q

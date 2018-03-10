@@ -1,0 +1,9 @@
+echo "ls -l"; ls -l
+echo "ls -l | grep 'Mar'"; ls -l | grep 'Mar'
+echo "(echo a; echo B; echo c; echo D) > test.txt"; (echo a; echo B; echo c; echo D) > test.txt
+echo "cat < test.txt | tr A-Z a-z | tee test2.txt | tr a-z A-Z > test3.txt"; cat < test.txt | tr A-Z a-z | tee test2.txt | tr a-z A-Z > test3.txt
+echo "cat test.txt"; cat test.txt
+echo "cat test2.txt"; cat test2.txt
+echo "cat test3.txt"; cat test3.txt
+echo "rm test.txt; rm test2.txt; rm test3.txt"; rm test.txt; rm test2.txt; rm test3.txt
+echo "--q"; --q

@@ -1,0 +1,6 @@
+echo "[testfile.txt]"; [testfile.txt]
+echo "echo a >> testfile.txt; cat testfile.txt"; echo a >> testfile.txt; cat testfile.txt
+echo "echo b >> testfile.txt; cat testfile.txt"; echo b >> testfile.txt; cat testfile.txt
+echo "(echo c; echo d) >> testfile.txt; cat testfile.txt"; (echo c; echo d) >> testfile.txt; cat testfile.txt
+echo "rm testfile.txt"; rm testfile.txt
+echo "--q"; --q
